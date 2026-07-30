@@ -1,0 +1,6 @@
+# .gitignore for Native PHP Boarding House System
+.DS_Store
+Thumbs.db
+*.log
+uploads/payments/*
+!uploads/payments/.gitkeep
