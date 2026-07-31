@@ -56,6 +56,13 @@ $sql .= " ORDER BY `id` DESC";
 $stmt = $pdo->prepare($sql);
 $stmt->execute($params);
 $rooms = $stmt->fetchAll();
+
+$dbInfo = [
+    'database' => $pdo->query('SELECT DATABASE()')->fetchColumn(),
+    'hostname' => $pdo->query('SELECT @@hostname')->fetchColumn(),
+    'port' => $pdo->query('SELECT @@port')->fetchColumn(),
+];
+$showDbInfo = isset($_GET['debug_db']) && $_GET['debug_db'] === '1';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -63,27 +70,7 @@ $rooms = $stmt->fetchAll();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Boarding House Booking System</title>
-    <link rel="stylesheet" href="style.css">
-    <style>
-        .room-img-container {
-            width: 100%;
-            height: 180px;
-            overflow: hidden;
-            border-radius: 8px;
-            margin-bottom: 16px;
-            position: relative;
-            background: #0f172a;
-        }
-        .room-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.3s ease;
-        }
-        .card:hover .room-img {
-            transform: scale(1.05);
-        }
-    </style>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <nav class="navbar">
@@ -128,6 +115,15 @@ $rooms = $stmt->fetchAll();
         <?php endif; ?>
         <?php if ($error): ?>
             <div class="alert alert-danger">❌ <?= e($error); ?></div>
+        <?php endif; ?>
+
+        <?php if ($showDbInfo): ?>
+            <div class="alert alert-info" style="margin-bottom:20px;">
+                <strong>DB Debug:</strong>
+                Database: <?= e($dbInfo['database']); ?>,
+                Host: <?= e($dbInfo['hostname']); ?>,
+                Port: <?= e($dbInfo['port']); ?>
+            </div>
         <?php endif; ?>
 
         <div class="page-header">

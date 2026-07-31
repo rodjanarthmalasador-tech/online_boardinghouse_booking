@@ -26,6 +26,32 @@ try {
         `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
 
+    $defaultUsers = [
+        [
+            'name' => 'Admin User',
+            'email' => 'admin@boardinghouse.com',
+            'password' => password_hash('admin123', PASSWORD_DEFAULT),
+            'role' => 'admin',
+            'phone' => '09100000001',
+        ],
+        [
+            'name' => 'Tenant User',
+            'email' => 'tenant@boardinghouse.com',
+            'password' => password_hash('tenant123', PASSWORD_DEFAULT),
+            'role' => 'tenant',
+            'phone' => '09100000002',
+        ],
+    ];
+
+    foreach ($defaultUsers as $user) {
+        $check = $pdo->prepare("SELECT `id` FROM `users` WHERE `email` = ?");
+        $check->execute([$user['email']]);
+        if (!$check->fetch()) {
+            $insert = $pdo->prepare("INSERT INTO `users` (`name`, `email`, `password`, `role`, `phone`) VALUES (?, ?, ?, ?, ?)");
+            $insert->execute([$user['name'], $user['email'], $user['password'], $user['role'], $user['phone']]);
+        }
+    }
+
     // 3. Create rooms table
     $pdo->exec("CREATE TABLE IF NOT EXISTS `rooms` (
         `id` INT AUTO_INCREMENT PRIMARY KEY,
@@ -39,6 +65,40 @@ try {
         `description` TEXT,
         `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
+
+    // Seed default rooms if the table is empty or missing standard room entries
+    $defaultRooms = [
+        ['Cozy Single Room', 'Single', '5500.00', 1, '2nd Floor', 'Available', 'images/single.png', 'A compact single room with air conditioning, free Wi-Fi, and a shared kitchen.'],
+        ['Double Comfort Room', 'Double', '9000.00', 2, '3rd Floor', 'Available', 'images/double.png', 'A spacious double room with modern furnishings and a balcony view.'],
+        ['Studio Suite', 'Studio', '13000.00', 2, '4th Floor', 'Available', 'images/studio.png', 'A studio room with private bathroom, kitchenette, and study area.'],
+        ['Bedspace Dormitory', 'Dormitory', '3500.00', 1, '1st Floor', 'Available', 'images/dormitory.png', 'A budget-friendly bedspace with access to shared amenities and common areas.'],
+        ['Family Suite', 'Double', '12000.00', 3, '5th Floor', 'Available', 'images/double.png', 'A family-friendly suite with extra space, seating area, and privacy.'],
+        ['Executive Studio', 'Studio', '15000.00', 2, '6th Floor', 'Available', 'images/studio.png', 'A premium studio with a work desk, private bathroom, and modern decor.'],
+        ['Private Loft', 'Studio', '17000.00', 2, '7th Floor', 'Available', 'images/studio.png', 'A stylish loft-style studio with a mezzanine sleeping area and city views.'],
+        ['Economy Bedspace', 'Dormitory', '3200.00', 1, 'Ground Floor', 'Available', 'images/dormitory.png', 'A low-cost bedspace with essential amenities and shared common areas.'],
+    ];
+
+    $insertRoom = $pdo->prepare("INSERT INTO `rooms` (`name`, `type`, `price`, `capacity`, `floor`, `status`, `image`, `description`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+    $checkRoom = $pdo->prepare("SELECT `id` FROM `rooms` WHERE `name` = ? LIMIT 1");
+    $updateRoom = $pdo->prepare("UPDATE `rooms` SET `type` = ?, `price` = ?, `capacity` = ?, `floor` = ?, `status` = ?, `image` = ?, `description` = ? WHERE `name` = ?");
+
+    foreach ($defaultRooms as $roomData) {
+        $checkRoom->execute([$roomData[0]]);
+        if (!$checkRoom->fetch()) {
+            $insertRoom->execute($roomData);
+        } else {
+            $updateRoom->execute([
+                $roomData[1],
+                $roomData[2],
+                $roomData[3],
+                $roomData[4],
+                $roomData[5],
+                $roomData[6],
+                $roomData[7],
+                $roomData[0],
+            ]);
+        }
+    }
 
     // Check if `image` column exists in `rooms` table
     $roomCols = array_column($pdo->query("SHOW COLUMNS FROM `rooms`")->fetchAll(), 'Field');
@@ -106,7 +166,7 @@ try {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Database Setup - Boarding House System</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body class="setup-body">
     <div class="setup-card">

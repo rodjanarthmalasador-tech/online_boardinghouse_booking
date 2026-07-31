@@ -83,44 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Submit Online Payment - Booking #<?= $bookingId; ?></title>
-    <link rel="stylesheet" href="style.css">
-    <style>
-        .pay-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 32px;
-            max-width: 650px;
-            margin: 0 auto;
-        }
-        .method-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-            gap: 12px;
-            margin-bottom: 24px;
-        }
-        .method-option {
-            background: var(--bg-main);
-            border: 2px solid var(--border);
-            border-radius: 10px;
-            padding: 14px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        .method-option:hover, .method-option.selected {
-            border-color: var(--primary);
-            background: rgba(79, 70, 229, 0.1);
-        }
-        .account-box {
-            background: rgba(15, 23, 42, 0.6);
-            border: 1px dashed var(--secondary);
-            padding: 16px;
-            border-radius: 8px;
-            margin-bottom: 24px;
-            font-size: 0.9rem;
-        }
-    </style>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <nav class="navbar">

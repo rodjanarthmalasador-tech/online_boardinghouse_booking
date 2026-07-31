@@ -98,16 +98,7 @@ $rooms = $pdo->query("SELECT * FROM `rooms` ORDER BY `id` DESC")->fetchAll();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Room Management CRUD - Boarding House</title>
-    <link rel="stylesheet" href="style.css">
-    <style>
-        .table-thumb {
-            width: 60px;
-            height: 45px;
-            object-fit: cover;
-            border-radius: 6px;
-            border: 1px solid var(--border);
-        }
-    </style>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <nav class="navbar">
