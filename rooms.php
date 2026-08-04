@@ -98,25 +98,32 @@ $rooms = $pdo->query("SELECT * FROM `rooms` ORDER BY `id` DESC")->fetchAll();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Room Management CRUD - Boarding House</title>
+    <link rel="icon" type="image/svg+xml" href="images/favicon.svg">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <nav class="navbar">
-        <div class="nav-container">
-            <a href="index.php" class="brand">🏠 BoardingHouse Hub</a>
-            <div class="nav-links">
-                <a href="index.php" class="nav-link">Browse Rooms</a>
-                <a href="rooms.php" class="nav-link active">Rooms CRUD</a>
-                <a href="bookings.php" class="nav-link">Bookings CRUD</a>
-                <div style="display:flex; align-items:center; gap:8px; margin-left:12px;">
-                    <span style="font-size:0.85rem; color:#38bdf8;">👑 Admin (<?= e($user['name']); ?>)</span>
-                    <a href="logout.php" class="btn btn-secondary btn-sm">Logout</a>
-                </div>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark border-bottom border-secondary sticky-top">
+        <div class="container-fluid px-3 px-lg-4">
+            <a class="navbar-brand fw-bold" href="index.php">🏠 BoardingHouse Hub</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="mainNavbar">
+                <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
+                    <li class="nav-item"><a href="index.php" class="nav-link">Browse Rooms</a></li>
+                    <li class="nav-item"><a href="rooms.php" class="nav-link active">Rooms CRUD</a></li>
+                    <li class="nav-item"><a href="bookings.php" class="nav-link">Bookings CRUD</a></li>
+                    <li class="nav-item d-flex align-items-center gap-2 ms-lg-2">
+                        <span class="navbar-text text-info small">👑 Admin (<?= e($user['name']); ?>)</span>
+                        <a href="logout.php" class="btn btn-outline-light btn-sm">Logout</a>
+                    </li>
+                </ul>
             </div>
         </div>
     </nav>
 
-    <div class="container">
+    <div class="container-fluid px-3 px-lg-4 py-4 py-lg-5">
         <?php if ($message): ?>
             <div class="alert alert-success">✓ <?= e($message); ?></div>
         <?php endif; ?>
@@ -124,7 +131,7 @@ $rooms = $pdo->query("SELECT * FROM `rooms` ORDER BY `id` DESC")->fetchAll();
             <div class="alert alert-danger">❌ <?= e($error); ?></div>
         <?php endif; ?>
 
-        <div class="page-header">
+        <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-4">
             <div>
                 <h1 class="page-title">Room Management (CRUD)</h1>
                 <p class="page-subtitle">Add, edit, view, or remove rooms and manage photos.</p>
@@ -134,66 +141,61 @@ $rooms = $pdo->query("SELECT * FROM `rooms` ORDER BY `id` DESC")->fetchAll();
             </button>
         </div>
 
-        <!-- Create / Edit Form -->
-        <div id="roomFormCard" class="form-card" style="margin-bottom: 32px; <?= $editRoom ? 'display:block;' : 'display:none;'; ?>">
-            <h3><?= $editRoom ? '✏️ Edit Room #' . $editRoom['id'] : '➕ Create New Room'; ?></h3>
-            <form method="POST" style="margin-top:20px;">
+        <div id="roomFormCard" class="form-card shadow-sm mb-4" style="<?= $editRoom ? 'display:block;' : 'display:none;'; ?>">
+            <h3 class="mb-3"><?= $editRoom ? '✏️ Edit Room #' . $editRoom['id'] : '➕ Create New Room'; ?></h3>
+            <form method="POST" class="row g-3">
                 <input type="hidden" name="action" value="<?= $editRoom ? 'update' : 'create'; ?>">
                 <?php if ($editRoom): ?>
                     <input type="hidden" name="id" value="<?= $editRoom['id']; ?>">
                 <?php endif; ?>
 
-                <div class="form-group">
+                <div class="col-12">
                     <label class="form-label">Room Name *</label>
                     <input type="text" name="name" class="form-control" required value="<?= e($editRoom['name'] ?? ''); ?>" placeholder="e.g. Room 203 - Single Standard">
                 </div>
 
-                <div class="form-row">
-                    <div class="form-group">
-                        <label class="form-label">Room Type *</label>
-                        <select name="type" class="form-control">
-                            <?php foreach (['Single', 'Double', 'Studio', 'Bedspace'] as $t): ?>
-                                <option value="<?= $t; ?>" <?= ($editRoom['type'] ?? '') === $t ? 'selected' : ''; ?>><?= $t; ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Monthly Price (₱) *</label>
-                        <input type="number" step="0.01" name="price" class="form-control" required value="<?= e($editRoom['price'] ?? '3500'); ?>">
-                    </div>
+                <div class="col-md-6">
+                    <label class="form-label">Room Type *</label>
+                    <select name="type" class="form-select">
+                        <?php foreach (['Single', 'Double', 'Studio', 'Bedspace'] as $t): ?>
+                            <option value="<?= $t; ?>" <?= ($editRoom['type'] ?? '') === $t ? 'selected' : ''; ?>><?= $t; ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Monthly Price (₱) *</label>
+                    <input type="number" step="0.01" name="price" class="form-control" required value="<?= e($editRoom['price'] ?? '3500'); ?>">
                 </div>
 
-                <div class="form-row">
-                    <div class="form-group">
-                        <label class="form-label">Capacity (Persons)</label>
-                        <input type="number" name="capacity" class="form-control" value="<?= e($editRoom['capacity'] ?? '1'); ?>">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Floor Level</label>
-                        <input type="text" name="floor" class="form-control" value="<?= e($editRoom['floor'] ?? '1st Floor'); ?>">
-                    </div>
+                <div class="col-md-6">
+                    <label class="form-label">Capacity (Persons)</label>
+                    <input type="number" name="capacity" class="form-control" value="<?= e($editRoom['capacity'] ?? '1'); ?>">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Floor Level</label>
+                    <input type="text" name="floor" class="form-control" value="<?= e($editRoom['floor'] ?? '1st Floor'); ?>">
                 </div>
 
-                <div class="form-group">
+                <div class="col-12">
                     <label class="form-label">Status *</label>
-                    <select name="status" class="form-control">
+                    <select name="status" class="form-select">
                         <option value="Available" <?= ($editRoom['status'] ?? '') === 'Available' ? 'selected' : ''; ?>>Available</option>
                         <option value="Occupied" <?= ($editRoom['status'] ?? '') === 'Occupied' ? 'selected' : ''; ?>>Occupied</option>
                         <option value="Maintenance" <?= ($editRoom['status'] ?? '') === 'Maintenance' ? 'selected' : ''; ?>>Maintenance</option>
                     </select>
                 </div>
 
-                <div class="form-group">
+                <div class="col-12">
                     <label class="form-label">Image Path / Photo URL</label>
                     <input type="text" name="image" class="form-control" value="<?= e($editRoom['image'] ?? ''); ?>" placeholder="images/single.png">
                 </div>
 
-                <div class="form-group">
+                <div class="col-12">
                     <label class="form-label">Description</label>
                     <textarea name="description" class="form-control" rows="3"><?= e($editRoom['description'] ?? ''); ?></textarea>
                 </div>
 
-                <div style="display:flex; gap:12px; justify-content:flex-end;">
+                <div class="col-12 d-flex justify-content-end gap-2">
                     <?php if ($editRoom): ?>
                         <a href="rooms.php" class="btn btn-secondary">Cancel Edit</a>
                     <?php endif; ?>
@@ -203,8 +205,8 @@ $rooms = $pdo->query("SELECT * FROM `rooms` ORDER BY `id` DESC")->fetchAll();
         </div>
 
         <!-- READ Table -->
-        <div class="table-container">
-            <table>
+        <div class="table-container shadow-sm">
+            <table class="table table-dark table-hover align-middle mb-0">
                 <thead>
                     <tr>
                         <th>Photo</th>
@@ -250,7 +252,7 @@ $rooms = $pdo->query("SELECT * FROM `rooms` ORDER BY `id` DESC")->fetchAll();
                             <td>
                                 <div style="display:flex; gap:8px;">
                                     <a href="rooms.php?edit=<?= $room['id']; ?>" class="btn btn-secondary btn-sm">Edit</a>
-                                    <form method="POST" onsubmit="return confirm('Delete this room?');" style="display:inline;">
+                                    <form method="POST" onsubmit="return confirm('Delete this room?');" class="d-inline">
                                         <input type="hidden" name="action" value="delete">
                                         <input type="hidden" name="id" value="<?= $room['id']; ?>">
                                         <button type="submit" class="btn btn-danger btn-sm">Delete</button>
@@ -274,5 +276,6 @@ $rooms = $pdo->query("SELECT * FROM `rooms` ORDER BY `id` DESC")->fetchAll();
             }
         }
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

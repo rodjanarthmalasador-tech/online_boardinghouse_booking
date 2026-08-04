@@ -53,10 +53,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tenant Registration - Boarding House System</title>
+    <link rel="icon" type="image/svg+xml" href="images/favicon.svg">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body class="setup-body">
-    <div class="setup-card" style="max-width: 450px; text-align: left;">
+    <div class="setup-card shadow-lg" style="max-width: 450px; text-align: left;">
         <div style="text-align: center; margin-bottom: 24px;">
             <div class="setup-icon">📝</div>
             <h2>Register Tenant Account</h2>
@@ -67,30 +69,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="alert alert-danger">❌ <?= e($error); ?></div>
         <?php endif; ?>
 
-        <form method="POST">
-            <div class="form-group">
+        <form method="POST" class="row g-3">
+            <div class="col-12">
                 <label class="form-label">Full Name *</label>
                 <input type="text" name="name" class="form-control" required placeholder="e.g. Maria Santos" value="<?= e($_POST['name'] ?? ''); ?>">
             </div>
 
-            <div class="form-group">
+            <div class="col-12">
                 <label class="form-label">Email Address *</label>
                 <input type="email" name="email" class="form-control" required placeholder="maria@example.com" value="<?= e($_POST['email'] ?? ''); ?>">
             </div>
 
-            <div class="form-group">
+            <div class="col-12">
                 <label class="form-label">Phone Number</label>
                 <input type="text" name="phone" class="form-control" placeholder="09123456789" value="<?= e($_POST['phone'] ?? ''); ?>">
             </div>
 
-            <div class="form-group">
+            <div class="col-12">
                 <label class="form-label">Password *</label>
                 <input type="password" name="password" class="form-control" required placeholder="••••••••">
             </div>
 
-            <button type="submit" class="btn btn-primary" style="width: 100%; padding: 12px; margin-top: 8px;">
-                Create Account & Log In
-            </button>
+            <div class="col-12">
+                <button type="submit" class="btn btn-primary w-100">
+                    Create Account & Log In
+                </button>
+            </div>
         </form>
 
         <div style="margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--border); font-size: 0.85rem; color: var(--text-muted); text-align: center;">

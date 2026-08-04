@@ -61,26 +61,33 @@ $payStatus   = $booking['payment_status'] ?? 'Unpaid';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Booking Receipt #<?= e($receiptNo); ?></title>
+    <link rel="icon" type="image/svg+xml" href="images/favicon.svg">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
     <!-- html2pdf.js for instant PDF download -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 <body>
-    <nav class="navbar no-print">
-        <div class="nav-container">
-            <a href="index.php" class="brand">🏠 BoardingHouse Hub</a>
-            <div class="nav-links" style="display:flex; gap:10px;">
-                <a href="index.php" class="nav-link">Browse Rooms</a>
-                <?php if (isLoggedIn()): ?>
-                    <a href="my_bookings.php" class="nav-link">My Bookings</a>
-                <?php endif; ?>
-                <button onclick="downloadPDF()" class="btn btn-primary btn-sm">📥 Download PDF</button>
-                <button onclick="window.print()" class="btn btn-secondary btn-sm">🖨️ Print Receipt</button>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark border-bottom border-secondary sticky-top no-print">
+        <div class="container-fluid px-3 px-lg-4">
+            <a class="navbar-brand fw-bold" href="index.php">🏠 BoardingHouse Hub</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="mainNavbar">
+                <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
+                    <li class="nav-item"><a href="index.php" class="nav-link">Browse Rooms</a></li>
+                    <?php if (isLoggedIn()): ?>
+                        <li class="nav-item"><a href="my_bookings.php" class="nav-link">My Bookings</a></li>
+                    <?php endif; ?>
+                    <li class="nav-item"><button onclick="downloadPDF()" class="btn btn-primary btn-sm">📥 Download PDF</button></li>
+                    <li class="nav-item"><button onclick="window.print()" class="btn btn-secondary btn-sm">🖨️ Print Receipt</button></li>
+                </ul>
             </div>
         </div>
     </nav>
 
-    <div class="container">
+    <div class="container-fluid px-3 px-lg-4 py-4 py-lg-5">
         <!-- Action Bar with 2 Separate Buttons -->
         <div class="action-bar no-print">
             <a href="<?= isLoggedIn() ? (isAdmin() ? 'bookings.php' : 'my_bookings.php') : 'index.php'; ?>" class="btn btn-secondary btn-sm">

@@ -27,28 +27,35 @@ $myBookings = $stmt->fetchAll();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Bookings - Boarding House</title>
+    <link rel="icon" type="image/svg+xml" href="images/favicon.svg">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <nav class="navbar">
-        <div class="nav-container">
-            <a href="index.php" class="brand">🏠 BoardingHouse Hub</a>
-            <div class="nav-links">
-                <a href="index.php" class="nav-link">Browse Rooms</a>
-                <a href="my_bookings.php" class="nav-link active">My Bookings</a>
-                <?php if (isAdmin()): ?>
-                    <a href="rooms.php" class="nav-link">Rooms CRUD</a>
-                    <a href="bookings.php" class="nav-link">Bookings CRUD</a>
-                <?php endif; ?>
-                <div style="display:flex; align-items:center; gap:8px; margin-left:12px;">
-                    <span style="font-size:0.85rem; color:#38bdf8;">👤 <?= e($user['name']); ?> (<?= ucfirst($user['role']); ?>)</span>
-                    <a href="logout.php" class="btn btn-secondary btn-sm">Logout</a>
-                </div>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark border-bottom border-secondary sticky-top">
+        <div class="container-fluid px-3 px-lg-4">
+            <a class="navbar-brand fw-bold" href="index.php">🏠 BoardingHouse Hub</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="mainNavbar">
+                <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
+                    <li class="nav-item"><a href="index.php" class="nav-link">Browse Rooms</a></li>
+                    <li class="nav-item"><a href="my_bookings.php" class="nav-link active">My Bookings</a></li>
+                    <?php if (isAdmin()): ?>
+                        <li class="nav-item"><a href="rooms.php" class="nav-link">Rooms CRUD</a></li>
+                        <li class="nav-item"><a href="bookings.php" class="nav-link">Bookings CRUD</a></li>
+                    <?php endif; ?>
+                    <li class="nav-item d-flex align-items-center gap-2 ms-lg-2">
+                        <span class="navbar-text text-info small">👤 <?= e($user['name']); ?> (<?= ucfirst($user['role']); ?>)</span>
+                        <a href="logout.php" class="btn btn-outline-light btn-sm">Logout</a>
+                    </li>
+                </ul>
             </div>
         </div>
     </nav>
 
-    <div class="container">
+    <div class="container-fluid px-3 px-lg-4 py-4 py-lg-5">
         <div class="page-header">
             <div>
                 <h1 class="page-title">My Booking Tracker</h1>
@@ -56,8 +63,8 @@ $myBookings = $stmt->fetchAll();
             </div>
         </div>
 
-        <div class="table-container">
-            <table>
+        <div class="table-container shadow-sm">
+            <table class="table table-dark table-hover align-middle mb-0">
                 <thead>
                     <tr>
                         <th>Booking ID</th>
@@ -119,5 +126,6 @@ $myBookings = $stmt->fetchAll();
             </table>
         </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
