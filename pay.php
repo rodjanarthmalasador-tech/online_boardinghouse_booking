@@ -83,22 +83,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Submit Online Payment - Booking #<?= $bookingId; ?></title>
+    <link rel="icon" type="image/svg+xml" href="images/favicon.svg">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <nav class="navbar">
-        <div class="nav-container">
-            <a href="index.php" class="brand">🏠 BoardingHouse Hub</a>
-            <div class="nav-links">
-                <a href="index.php" class="nav-link">Browse Rooms</a>
-                <?php if (isLoggedIn()): ?>
-                    <a href="my_bookings.php" class="nav-link">My Bookings</a>
-                <?php endif; ?>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark border-bottom border-secondary sticky-top">
+        <div class="container-fluid px-3 px-lg-4">
+            <a class="navbar-brand fw-bold" href="index.php">🏠 BoardingHouse Hub</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="mainNavbar">
+                <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
+                    <li class="nav-item"><a href="index.php" class="nav-link">Browse Rooms</a></li>
+                    <?php if (isLoggedIn()): ?>
+                        <li class="nav-item"><a href="my_bookings.php" class="nav-link">My Bookings</a></li>
+                    <?php endif; ?>
+                </ul>
             </div>
         </div>
     </nav>
 
-    <div class="container">
+    <div class="container-fluid px-3 px-lg-4 py-4 py-lg-5">
         <div class="page-header" style="max-width: 650px; margin: 0 auto 24px auto;">
             <div>
                 <h1 class="page-title">Submit Online Payment</h1>
@@ -127,7 +134,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             </div>
         <?php endif; ?>
 
-        <div class="pay-card">
+        <div class="pay-card shadow-lg">
             <!-- Account Details Box -->
             <div class="account-box">
                 <div style="font-weight: 700; color:#38bdf8; margin-bottom: 8px;">💳 Boarding House Payment Accounts:</div>
@@ -139,12 +146,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 </div>
             </div>
 
-            <form method="POST" enctype="multipart/form-data">
+            <form method="POST" enctype="multipart/form-data" class="row g-3">
                 <input type="hidden" name="action" value="submit_payment">
 
-                <div class="form-group">
+                <div class="col-12">
                     <label class="form-label">Select Payment Method *</label>
-                    <select name="payment_method" class="form-control" required>
+                    <select name="payment_method" class="form-select" required>
                         <option value="GCash">📱 GCash</option>
                         <option value="Maya">💳 Maya</option>
                         <option value="Bank Transfer">🏦 Bank Transfer (BDO / BPI)</option>
@@ -152,29 +159,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                     </select>
                 </div>
 
-                <div class="form-row">
-                    <div class="form-group">
-                        <label class="form-label">Amount Paid (₱) *</label>
-                        <input type="number" step="0.01" name="amount" class="form-control" required value="<?= e($booking['room_price']); ?>">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Reference / Ref #</label>
-                        <input type="text" name="reference_number" class="form-control" placeholder="e.g. 1002345892 (Optional for Cash)">
-                    </div>
+                <div class="col-md-6">
+                    <label class="form-label">Amount Paid (₱) *</label>
+                    <input type="number" step="0.01" name="amount" class="form-control" required value="<?= e($booking['room_price']); ?>">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Reference / Ref #</label>
+                    <input type="text" name="reference_number" class="form-control" placeholder="e.g. 1002345892 (Optional for Cash)">
                 </div>
 
-                <div class="form-group">
+                <div class="col-12">
                     <label class="form-label">Upload Proof of Payment (Screenshot / Receipt)</label>
                     <input type="file" name="proof_image" class="form-control" accept="image/*,.pdf">
                     <div style="font-size:0.8rem; color:var(--text-muted); margin-top:4px;">Upload screenshot of your GCash/Maya confirmation or deposit slip.</div>
                 </div>
 
-                <div style="display:flex; gap:12px; justify-content:flex-end; margin-top:24px;">
+                <div class="col-12 d-flex justify-content-end gap-2 mt-2">
                     <a href="my_bookings.php" class="btn btn-secondary">Back to My Bookings</a>
                     <button type="submit" class="btn btn-primary">Submit Payment Details</button>
                 </div>
             </form>
         </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
