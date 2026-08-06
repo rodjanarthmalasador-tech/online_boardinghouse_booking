@@ -6,10 +6,10 @@ requireAuth();
 $user = currentUser();
 $pdo = getDB();
 
-// Fetch personal bookings with payment status (handling both payment_method & method column names)
+// Fetch personal bookings with payment status
 $stmt = $pdo->prepare("SELECT b.*, r.name AS room_name, r.price AS room_price, r.type AS room_type, r.floor AS room_floor,
                               p.status AS payment_status, 
-                              COALESCE(p.payment_method, p.method) AS payment_method, 
+                              p.payment_method AS payment_method, 
                               p.reference_number
                        FROM `bookings` b 
                        JOIN `rooms` r ON b.room_id = r.id 
@@ -35,6 +35,9 @@ $myBookings = $stmt->fetchAll();
             <a href="index.php" class="brand">🏠 BoardingHouse Hub</a>
             <div class="nav-links">
                 <a href="index.php" class="nav-link">Browse Rooms</a>
+                <?php if (isAdmin()): ?>
+                    <a href="reports.php" class="nav-link">Reports</a>
+                <?php endif; ?>
                 <a href="my_bookings.php" class="nav-link active">My Bookings</a>
                 <?php if (isAdmin()): ?>
                     <a href="rooms.php" class="nav-link">Rooms CRUD</a>

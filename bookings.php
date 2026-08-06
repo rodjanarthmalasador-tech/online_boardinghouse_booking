@@ -78,7 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 // READ Bookings with Room, User & Payment Info
 $sql = "SELECT b.*, r.name AS room_name, r.price AS room_price, r.type AS room_type, 
                u.name AS user_name, u.email AS user_email, u.phone AS user_phone,
-               p.id AS payment_id, COALESCE(p.payment_method, p.method) AS payment_method, p.reference_number, COALESCE(p.proof_image, p.receipt_photo) AS proof_image, p.status AS payment_status, p.amount AS paid_amount
+               p.id AS payment_id, p.payment_method AS payment_method, p.reference_number, p.proof_image AS proof_image, p.status AS payment_status, p.amount AS paid_amount
         FROM `bookings` b 
         JOIN `rooms` r ON b.room_id = r.id 
         LEFT JOIN `users` u ON b.user_id = u.id 

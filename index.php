@@ -91,6 +91,9 @@ $rooms = $stmt->fetchAll();
             <a href="index.php" class="brand">🏠 BoardingHouse Hub</a>
             <div class="nav-links" style="display:flex; align-items:center;">
                 <a href="index.php" class="nav-link active">Browse Rooms</a>
+                <?php if (isAdmin()): ?>
+                    <a href="reports.php" class="nav-link">Reports</a>
+                <?php endif; ?>
                 
                 <?php if (isLoggedIn()): ?>
                     <a href="my_bookings.php" class="nav-link">My Bookings</a>

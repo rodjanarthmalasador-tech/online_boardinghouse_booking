@@ -26,6 +26,32 @@ try {
         `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
 
+    $defaultUsers = [
+        [
+            'name' => 'Admin User',
+            'email' => 'admin@boardinghouse.com',
+            'password' => password_hash('admin123', PASSWORD_DEFAULT),
+            'role' => 'admin',
+            'phone' => '09100000001',
+        ],
+        [
+            'name' => 'Tenant User',
+            'email' => 'tenant@boardinghouse.com',
+            'password' => password_hash('tenant123', PASSWORD_DEFAULT),
+            'role' => 'tenant',
+            'phone' => '09100000002',
+        ],
+    ];
+
+    foreach ($defaultUsers as $user) {
+        $check = $pdo->prepare("SELECT `id` FROM `users` WHERE `email` = ?");
+        $check->execute([$user['email']]);
+        if (!$check->fetch()) {
+            $insert = $pdo->prepare("INSERT INTO `users` (`name`, `email`, `password`, `role`, `phone`) VALUES (?, ?, ?, ?, ?)");
+            $insert->execute([$user['name'], $user['email'], $user['password'], $user['role'], $user['phone']]);
+        }
+    }
+
     // 3. Create rooms table
     $pdo->exec("CREATE TABLE IF NOT EXISTS `rooms` (
         `id` INT AUTO_INCREMENT PRIMARY KEY,
@@ -63,7 +89,12 @@ try {
         `check_in_date` DATE NOT NULL,
         `notes` TEXT,
         `status` ENUM('Pending', 'Approved', 'Rejected') DEFAULT 'Pending',
-        `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        INDEX `idx_bookings_room` (`room_id`),
+        INDEX `idx_bookings_user` (`user_id`),
+        INDEX `idx_bookings_status` (`status`),
+        CONSTRAINT `fk_bookings_room` FOREIGN KEY (`room_id`) REFERENCES `rooms`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE,
+        CONSTRAINT `fk_bookings_user` FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE SET NULL ON UPDATE CASCADE
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
 
     // 5. Create payments table
@@ -75,7 +106,10 @@ try {
         `proof_image` VARCHAR(255) NULL,
         `amount` DECIMAL(10,2) NOT NULL,
         `status` ENUM('Pending Verification', 'Verified', 'Rejected') DEFAULT 'Pending Verification',
-        `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        INDEX `idx_payments_booking` (`booking_id`),
+        INDEX `idx_payments_status` (`status`),
+        CONSTRAINT `fk_payments_booking` FOREIGN KEY (`booking_id`) REFERENCES `bookings`(`id`) ON DELETE CASCADE ON UPDATE CASCADE
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
 
     // Check and add missing columns to `payments` table
